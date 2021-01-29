@@ -1,0 +1,7 @@
+<Files ".htaccess">
+Require all denied
+</Files>
+
+RewriteEngine on
+RewriteRule ^$ public_html/index.html [L,END]
+RewriteRule ^(.*)$ public_html/$1 [L,END]
