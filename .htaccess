@@ -2,6 +2,6 @@
 Require all denied
 </Files>
 
-RewriteEngine on
-RewriteRule ^$ public_html/index.php [L,END]
-RewriteRule ^(.*)$ public_html/$1 [L,END]
+<Files "modal.php">
+Require all denied
+</Files>

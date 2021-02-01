@@ -1,0 +1,86 @@
+{
+    "categories": [
+        {
+            "name": "Moderna språk",
+            "maxPoints": "1.5",
+            "courses": [
+                {
+                    "code": "MODXXX03",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MODXXX04",
+                    "points": "1"
+                },
+                {
+                    "code": "MODXXX05",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MODZHO03",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MODZHO04",
+                    "points": "1"
+                },
+                {
+                    "code": "MODZHO05",
+                    "points": "0.5"
+                }
+            ]
+        },
+        {
+            "name": "Engelska",
+            "maxPoints": "1",
+            "courses": [
+                {
+                    "code": "ENGENG07",
+                    "points": "1"
+                },
+                {
+                    "code": "ENLENE07",
+                    "points": "1"
+                }
+            ]
+        },
+        {
+            "name": "Matematik",
+            "maxPoints": "1.5",
+            "courses": [
+                {
+                    "code": "MATMAT02a",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MATMAT02b",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MATMAT02c",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MATMAT03b",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MATMAT03c",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MATMAT04",
+                    "points": "0.5"
+                },
+                {
+                    "code": "MATMAT05",
+                    "points": "1"
+                },
+                {
+                    "code": "MATMAT00S",
+                    "points": "0.5"
+                }
+            ]
+        }
+    ]
+}
