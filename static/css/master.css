@@ -6,3 +6,35 @@
     margin-top: -50px;
     margin-left: -100px;
 }
+
+.row
+{
+    display: flex!important;
+    word-wrap: normal;
+}
+
+.course-list-titel
+{
+    font-weight: bold;
+}
+
+.course-list-item > *:last-child, .course-list-titel > *:last-child
+{
+    border-left: 1px solid grey;
+}
+
+.course-list-item
+{
+    transition-duration: 0.25s;
+}
+
+.course-list-item:hover
+{
+    transition-duration: 0.25s;
+    border: 6px orangered solid !important;
+}
+
+.list-group
+{
+    padding-left: var(--bs-gutter-x,.75rem)!important;
+}

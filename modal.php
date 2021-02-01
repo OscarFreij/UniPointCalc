@@ -1,4 +1,4 @@
-<!-- Button trigger modal -->
+<!-- Answer modal -->
 <div class="modal fade" id="AnswerModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AnswerModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -11,6 +11,26 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Stäng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Removal Confirmation modal -->
+<div class="modal fade" id="RemovalConfirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="RemovalConfirmationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="RemovalConfirmationModalLabel">Är du säker?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <span>Är du säker på att du vill ta bort: </span>
+                <span>!KURSNAMN!</span>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Ta bort</button>
+            <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Stäng</button>
             </div>
         </div>
     </div>
@@ -57,7 +77,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-            <button type="button" class="btn btn-success" data-bs-dismiss="modal">Lägg till</button>
+            <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="AddRow()">Lägg till</button>
                 <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Stäng</button>
             </div>
         </div>

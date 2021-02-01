@@ -1,5 +1,6 @@
 var dataObject = new Object();
 var merit_dataObject = new Object();
+var selectedCourses = new Object();
 var display_wrapper;
 
 window.onload = (event) => {
@@ -31,6 +32,9 @@ function Init()
     xhttp.open("POST", "data/merit_data.json", true);
     xhttp.send();
     document.getElementById("loadingGif").style.display = "block";
+
+
+    selectedCourses.courses = new Array();
 }
 
 function CheckIfMeritAvailable(courseCode)
@@ -38,7 +42,6 @@ function CheckIfMeritAvailable(courseCode)
     var result = false;
     merit_dataObject.categories.forEach(category => {
         category.courses.forEach(course => {
-            console.log(course.code+"<|>"+courseCode);
             if (course.code == courseCode)
             {
                 result = true;
@@ -121,4 +124,126 @@ function CheckCourse()
         $('#isMeritCourse')[0].parentElement.style.display = "none";
         // TELL USER HE DID WRONG!
     }
+}
+
+function ClearAddMenu()
+{
+    ResetCourses();
+    $('#select_category')[0].children[0].selected = true;
+    $('#select_course')[0].disabled = true;
+    $('#select_grade')[0].children[0].selected = true;
+    $('#select_grade')[0].disabled = true;
+    $('#isMeritCourse')[0].checked = false;
+    $('#isMeritCourse')[0].parentElement.style.display = "none";
+}
+
+function AddRow()
+{
+    document.getElementById("loadingGif").style.display = "block";
+    if ($('#select_grade')[0].value != "NONE")
+    {
+        var courseItem = new Object();
+        courseItem.code = $('#select_course')[0].value;
+        courseItem.grade = $('#select_grade')[0].value;
+        courseItem.isMerit = $('#isMeritCourse')[0].checked;
+
+        var courseName = "";
+        dataObject.categories.forEach(category => {
+            category.courses.forEach(course => {
+                if (course.code == courseItem.code)
+                {
+                    courseName = course.name;
+                }
+            });
+        });
+
+
+        var element = document.createElement("li");
+        element.classList.add("list-group-item");
+
+        if (courseItem.isMerit == true)
+        {
+            element.classList.add("list-group-item-warning");
+        }
+
+        element.classList.add("course-list-item");
+        element.classList.add("row");
+
+        element.appendChild(document.createElement("span"));
+        element.appendChild(document.createElement("span"));
+
+        element.children[0].classList.add("col-10");
+        element.children[0].innerText = courseName;
+        element.children[1].classList.add("col-2");
+        element.children[1].innerText = courseItem.grade;
+
+        element.setAttribute("onclick", 'OpenRowRemoval("'+courseItem.code+'")');
+
+        courseItem.html = element;
+
+        selectedCourses.courses.push(courseItem);
+        ReloadList();
+        ClearAddMenu();
+        document.getElementById("loadingGif").style.display = "none"; 
+        return true;
+    }
+    else
+    {
+        ClearAddMenu();
+        document.getElementById("loadingGif").style.display = "none"; 
+        return false;
+    }
+}
+
+function OpenRowRemoval(courseCode)
+{
+    var modal = new bootstrap.Modal($('#RemovalConfirmationModal')[0]);
+    
+
+    $('#RemovalConfirmationModal').find('.btn-danger')[0].setAttribute("onclick", 'RemoveRow("'+courseCode+'")');
+
+    var courseName = "";
+    dataObject.categories.forEach(category => {
+        category.courses.forEach(course => {
+            if (course.code == courseCode)
+            {
+                courseName = course.name;
+            }
+        });
+    });
+
+    $('#RemovalConfirmationModal').find('.modal-body')[0].children[1].innerText = courseName;
+    
+
+    modal.show();
+}
+
+function RemoveRow(courseCode)
+{
+    for (let i = 0; i < selectedCourses.courses.length; i++) {
+        const element = selectedCourses.courses[i];
+        
+        if (element.code == courseCode)
+        {
+            selectedCourses.courses.splice(i, 1);
+        }
+    }
+    ReloadList();
+}
+
+function ReloadList()
+{
+    document.getElementById("loadingGif").style.display = "block";
+
+    var childList = $('#list').find('.course-list-item');
+    for (let i = 0; i < childList.length; i++) {
+        const element = childList[i];
+        element.remove();
+    }
+
+    selectedCourses.courses.forEach(element => {
+        $('#list')[0].appendChild(element.html);
+    });
+
+    document.getElementById("loadingGif").style.display = "none"; 
 }
