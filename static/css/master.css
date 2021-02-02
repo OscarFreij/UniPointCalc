@@ -38,3 +38,38 @@
 {
     padding-left: var(--bs-gutter-x,.75rem)!important;
 }
+
+#alertBox
+{
+    position: absolute;
+    margin: 1.25rem auto;
+    bottom: 3em;
+    z-index: 1050;
+}
+
+#alertBox > *
+{
+    margin: 1.25rem;
+}
+
+
+.alert
+{
+    position: relative;
+    margin-top: 0.5em;
+    margin-bottom: 0;
+    margin-left: 3em;
+    margin-right: 3em;
+}
+
+.modal-dialog
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.modal
+{
+    overflow-y: hidden;
+}

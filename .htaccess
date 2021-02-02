@@ -2,6 +2,6 @@
 Require all denied
 </Files>
 
-<Files "modal.php">
+<Files "modal.html">
 Require all denied
 </Files>

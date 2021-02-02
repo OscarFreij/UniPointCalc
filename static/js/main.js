@@ -139,6 +139,7 @@ function ClearAddMenu()
 
 function AddRow()
 {
+    var modal = bootstrap.Modal.getInstance($('#AddCourseModal')[0]);
     document.getElementById("loadingGif").style.display = "block";
     if ($('#select_grade')[0].value != "NONE")
     {
@@ -182,14 +183,27 @@ function AddRow()
         courseItem.html = element;
 
         selectedCourses.courses.push(courseItem);
+        modal.hide();
         ReloadList();
         ClearAddMenu();
         document.getElementById("loadingGif").style.display = "none"; 
+        DisplayAlertMessage(courseName+" tillagd!",1,2000);
         return true;
     }
     else
     {
-        ClearAddMenu();
+        if ($('#select_category')[0].value == "NONE")
+        {
+            DisplayAlertMessage("Välj kategori!",2,2000);
+        }
+        else if ($('#select_course')[0].value == "NONE")
+        {
+            DisplayAlertMessage("Välj kurs!",2,2000);
+        }
+        else if ($('#select_grade')[0].value == "NONE")
+        {
+            DisplayAlertMessage("Välj betyg!",2,2000);
+        }
         document.getElementById("loadingGif").style.display = "none"; 
         return false;
     }
@@ -229,6 +243,7 @@ function RemoveRow(courseCode)
         }
     }
     ReloadList();
+    DisplayAlertMessage("Kurs borttagen!",2,2000);
 }
 
 function ReloadList()
@@ -246,4 +261,41 @@ function ReloadList()
     });
 
     document.getElementById("loadingGif").style.display = "none"; 
+}
+
+async function DisplayAlertMessage(message, level, timeMs)
+{
+    var element = document.createElement("div");
+    element.role = "alert";
+    element.classList.add("fade");
+    element.classList.add("show");
+    element.classList.add("alert");
+
+    switch (level) {
+        case 0:
+            element.classList.add("alert-info");
+            break;
+        case 1:
+            element.classList.add("alert-success");
+            break;
+        case 2:
+            element.classList.add("alert-warning");
+            break;
+        case 3:
+            element.classList.add("alert-danger");
+            break;
+        default:
+            break;
+    }
+
+    element.innerText = message;
+    
+    var bsAlert = new bootstrap.Alert(element);
+
+    $('#alertBox')[0].appendChild(element);
+
+    setTimeout(() => {
+        bsAlert.close();
+    }, timeMs);
+
 }

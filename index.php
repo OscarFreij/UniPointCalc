@@ -33,12 +33,18 @@
         </div>
     </div>
 
+
+
     <!--ModalSection START-->
     <?php
-    require "modal.php";
+    require "modal.html";
     ?>
     <!--ModalSection End-->
     
+    <div id="alertBox" class="container-fluid">
+
+    </div>
+
     <!--Loading gif-->
     <img id="loadingGif" src="static/media/loading.gif" alt="" style="display: none;">
 
