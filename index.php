@@ -23,7 +23,7 @@
         </div>
         <div id="control_wrapper" class="container mb-3">
             <div class="col-md-12 btn-group" role="group">
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AnswerModal">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AnswerModal" onclick="CalculateFinalScore()">
                     Kalkulera
                 </button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCourseModal">

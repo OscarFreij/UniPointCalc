@@ -53,6 +53,89 @@ function CheckIfMeritAvailable(courseCode)
     return result;
 }
 
+function CalculateMerit()
+{
+    var totalMerit = 0;
+    merit_dataObject.categories.forEach(category => {
+        var categoryMerit = 0;
+        category.courses.forEach(m_course => {
+            selectedCourses.courses.forEach(s_course => {
+                if (m_course.code == s_course.code && s_course.isMerit)
+                {
+                    categoryMerit += parseFloat(m_course.points);
+                }
+            });
+        });
+        if (categoryMerit > parseFloat(category.maxPoints))
+        {
+            categoryMerit = parseFloat(category.maxPoints);
+            console.warn("above limit. reducing merit points!");
+        }
+        totalMerit += categoryMerit;
+    });
+    return totalMerit;
+}
+
+function CalculateRawScore()
+{
+    var totalBaseScore = 0;
+    var gradeScore = 0;
+
+    selectedCourses.courses.forEach(course => {
+        var coursePoints = parseInt(course.points);
+        totalBaseScore += coursePoints;
+        switch (course.grade) {
+            case "A":
+                gradeScore += 20 * coursePoints;
+                break;
+            case "B":
+                gradeScore += 17.5 * coursePoints;
+                break;
+            case "C":
+                gradeScore += 15 * coursePoints;
+                break;
+            case "D":
+                gradeScore += 12.5 * coursePoints;
+                break;
+            case "E":
+                gradeScore += 10 * coursePoints;
+                break;
+            case "F":
+                gradeScore += 0 * coursePoints;
+                break;
+        }
+    });
+
+    
+    
+    var rawScore = parseFloat(gradeScore/totalBaseScore);
+    console.log(rawScore);
+    return rawScore;
+}
+
+function CalculateFinalScore()
+{
+    var merit = CalculateMerit();
+    var rawScore = CalculateRawScore();
+
+    var finalScore = parseFloat((rawScore+merit).toFixed(2));
+
+    var modalBody = $('#AnswerModal').find('.modal-body')[0];
+    modalBody.innerHTML = "";
+
+    var elementTotal = document.createElement("span");
+    elementTotal.innerText = "Total: "+finalScore+"p";
+
+    var elementMerit = document.createElement("span");
+    elementMerit.innerText = "Varav merit: "+merit+"p";
+
+    modalBody.appendChild(elementTotal);
+    modalBody.appendChild(document.createElement("br"));
+    modalBody.appendChild(elementMerit);
+
+    return finalScore;
+}
+
 function LoadCategory()
 {
     dataObject.categories.forEach(element => {
@@ -154,6 +237,7 @@ function AddRow()
                 if (course.code == courseItem.code)
                 {
                     courseName = course.name;
+                    courseItem.points = course.points;
                 }
             });
         });
@@ -187,22 +271,22 @@ function AddRow()
         ReloadList();
         ClearAddMenu();
         document.getElementById("loadingGif").style.display = "none"; 
-        DisplayAlertMessage(courseName+" tillagd!",1,2000);
+        DisplayAlertMessage(courseName+" tillagd!",1,3500);
         return true;
     }
     else
     {
         if ($('#select_category')[0].value == "NONE")
         {
-            DisplayAlertMessage("Välj kategori!",2,2000);
+            DisplayAlertMessage("Välj kategori!",2,3500);
         }
         else if ($('#select_course')[0].value == "NONE")
         {
-            DisplayAlertMessage("Välj kurs!",2,2000);
+            DisplayAlertMessage("Välj kurs!",2,3500);
         }
         else if ($('#select_grade')[0].value == "NONE")
         {
-            DisplayAlertMessage("Välj betyg!",2,2000);
+            DisplayAlertMessage("Välj betyg!",2,3500);
         }
         document.getElementById("loadingGif").style.display = "none"; 
         return false;
@@ -243,7 +327,7 @@ function RemoveRow(courseCode)
         }
     }
     ReloadList();
-    DisplayAlertMessage("Kurs borttagen!",2,2000);
+    DisplayAlertMessage("Kurs borttagen!",2,3500);
 }
 
 function ReloadList()
