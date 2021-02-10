@@ -13,6 +13,8 @@
     <div id="wrapper" class="container-fluid text-center">
         <div id="info_wrapper" class="container mb-3">
             <span>Info Wrapper Content</span>
+            <input type="file" name="" id="fileImport">
+            <button type="button" class="btn btn-info" onclick="ImportFromFile()">Importera .ggc fil här!</button>
         </div>
         <div id="course_wrapper" class="container mb-3">
             <span>Din kurs lista</span>

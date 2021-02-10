@@ -383,3 +383,100 @@ async function DisplayAlertMessage(message, level, timeMs)
     }, timeMs);
 
 }
+
+function ExportToFile()
+{
+    var data = new Object();
+    data.courses = new Array();
+    selectedCourses.courses.forEach(course => {
+        var item = new Object();
+        item.code = course.code;
+        item.grade = course.grade;
+        item.isMerit = course.isMerit;
+        data.courses.push(item);
+    });
+
+    document.getElementById("loadingGif").style.display = "block";
+    var downloadObject = document.createElement("a");
+    var fileName = new Date().toLocaleString()+".ggc";
+
+    downloadObject.setAttribute('href', 'data:text/plain;charset=utf-8,'+ encodeURIComponent(JSON.stringify(data)));
+    downloadObject.setAttribute('download', fileName);
+
+    downloadObject.style.display = 'none';
+    document.body.appendChild(downloadObject);
+
+    downloadObject.click();
+
+    document.body.removeChild(downloadObject);
+    document.getElementById("loadingGif").style.display = "none";
+    DisplayAlertMessage("Laddade ner data till "+fileName, 1, 6000);
+}
+
+function ImportFromFile()
+{
+    const importFile = document.getElementById('fileImport').files[0];
+    var reader = new FileReader()
+
+    reader.onload = function() {
+        AddMultiRows(JSON.parse(reader.result));
+    }
+
+    reader.readAsText(importFile);
+}
+
+function AddMultiRows(importObject)
+{
+    //modal.hide(); - close add modal;
+    do
+    {
+        var currentCourseItem = importObject.courses.shift();
+        var courseItem = new Object();
+        courseItem.code = currentCourseItem.code;
+        courseItem.grade = currentCourseItem.grade;
+        courseItem.isMerit = currentCourseItem.isMerit;
+
+        var courseName = "";
+        dataObject.categories.forEach(category => {
+            category.courses.forEach(course => {
+                if (course.code == courseItem.code)
+                {
+                    courseName = course.name;
+                    courseItem.points = course.points;
+                }
+            });
+        });
+
+
+        var element = document.createElement("li");
+        element.classList.add("list-group-item");
+
+        if (courseItem.isMerit == true)
+        {
+            element.classList.add("list-group-item-warning");
+        }
+
+        element.classList.add("course-list-item");
+        element.classList.add("row");
+
+        element.appendChild(document.createElement("span"));
+        element.appendChild(document.createElement("span"));
+
+        element.children[0].classList.add("col-10");
+        element.children[0].innerText = courseName;
+        element.children[1].classList.add("col-2");
+        element.children[1].innerText = courseItem.grade;
+
+        element.setAttribute("onclick", 'OpenRowRemoval("'+courseItem.code+'")');
+
+        courseItem.html = element;
+
+        selectedCourses.courses.push(courseItem);
+
+        DisplayAlertMessage(courseName+" tillagd!",1,3500);
+    }
+    while (importObject.courses.length > 0);
+    ReloadList();
+    document.getElementById("loadingGif").style.display = "none"; 
+    return true;
+}
