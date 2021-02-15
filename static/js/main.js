@@ -69,10 +69,16 @@ function CalculateMerit()
         if (categoryMerit > parseFloat(category.maxPoints))
         {
             categoryMerit = parseFloat(category.maxPoints);
-            console.warn("above limit. reducing merit points!");
+            console.warn("above category limit. reducing merit points!");
         }
         totalMerit += categoryMerit;
     });
+
+    if (totalMerit > 2.5)
+    {
+        totalMerit = 2.5;
+        console.warn("above global limit. reducing merit points!");
+    }
     return totalMerit;
 }
 
