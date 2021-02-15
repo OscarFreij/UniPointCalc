@@ -12,13 +12,12 @@
 <body>
     <div id="wrapper" class="container-fluid text-center">
         <div id="info_wrapper" class="container mb-3">
-            <span>Info Wrapper Content</span>
+            <span>Gymnasie poängs räknare</span>
         </div>
         <div id="course_wrapper" class="container mb-3">
             <span>Din kurs lista</span>
             <ul id="list" class="list-group container">
                 <li class="list-group-item list-group-item-secondary course-list-titel row"><span class="col-10">Kursnamn</span><span class="col-2">Betyg</span></li>
-                
             </ul>          
         </div>
         <div id="control_wrapper" class="container mb-3">
