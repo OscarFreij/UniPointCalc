@@ -470,6 +470,13 @@ function ExportToURL()
 function ImportFromFile()
 {
     const importFile = document.getElementById('fileImport').files[0];
+
+    if (importFile == null)
+    {
+        DisplayAlertMessage("Välje en .ggc fil att läsa in!",3,2500);
+        return;
+    }
+
     var reader = new FileReader()
 
     reader.onload = function() {
@@ -501,6 +508,7 @@ async function ImportFromUrl()
 function AddMultiRows(importObject)
 {
     //modal.hide(); - close add modal;
+    var itemCount = importObject.courses.length;
     do
     {
         var currentCourseItem = importObject.courses.shift();
@@ -545,10 +553,18 @@ function AddMultiRows(importObject)
         courseItem.html = element;
 
         selectedCourses.courses.push(courseItem);
-
-        DisplayAlertMessage(courseName+" tillagd!",1,3500);
     }
     while (importObject.courses.length > 0);
+    
+    if (itemCount == 1)
+    {
+        DisplayAlertMessage(itemCount+" kurs blev tillagd!",1,3500);
+    }
+    else
+    {
+        DisplayAlertMessage(itemCount+" kurser blev tillagda!",1,3500);
+    }
+
     ReloadList();
     document.getElementById("loadingGif").style.display = "none"; 
     return true;

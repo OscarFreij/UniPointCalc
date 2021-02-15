@@ -13,8 +13,6 @@
     <div id="wrapper" class="container-fluid text-center">
         <div id="info_wrapper" class="container mb-3">
             <span>Info Wrapper Content</span>
-            <input type="file" name="" id="fileImport">
-            <button type="button" class="btn btn-info" onclick="ImportFromFile()">Importera .ggc fil här!</button>
         </div>
         <div id="course_wrapper" class="container mb-3">
             <span>Din kurs lista</span>
@@ -27,6 +25,9 @@
             <div class="col-md-12 btn-group" role="group">
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#AnswerModal" onclick="CalculateFinalScore()">
                     Kalkulera
+                </button>
+                <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#SaveLoadModal">
+                    Spara / Ladda upp
                 </button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddCourseModal">
                     Lägg till kurs
