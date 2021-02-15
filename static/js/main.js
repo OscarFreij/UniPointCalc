@@ -4,37 +4,72 @@ var selectedCourses = new Object();
 var display_wrapper;
 
 window.onload = (event) => {
-    Init();
-    console.log('page is fully loaded');
+    document.getElementById("loadingGif").style.display = "block";
+    Init().then(
+        function(value) {console.log('page is fully loaded');},
+        function(error) {console.error(error);}
+    );
+    document.getElementById("loadingGif").style.display = "none";    
 };
 
-function Init()
+async function Init()
 {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            dataObject = JSON.parse(this.responseText);
-            document.getElementById("loadingGif").style.display = "none";
-            LoadCategory();
-        }
-    };
-    xhttp.open("POST", "data/courses.json", true);
-    xhttp.send();
-    document.getElementById("loadingGif").style.display = "block";
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            merit_dataObject = JSON.parse(this.responseText);
-            document.getElementById("loadingGif").style.display = "none";
-        }
-    };
-    xhttp.open("POST", "data/merit_data.json", true);
-    xhttp.send();
-    document.getElementById("loadingGif").style.display = "block";
-
-
     selectedCourses.courses = new Array();
+    
+    const promise1 = new Promise(function(myResolve, myReject)
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                dataObject = JSON.parse(this.responseText);
+                LoadCategory();
+                myResolve();
+            }
+            else if (this.readyState == 4 && this.status != 200)
+            {
+                myReject("Failed to load courses data from data/courses.json");
+            }
+        };
+        xhttp.open("POST", "data/courses.json", true);
+        xhttp.send();
+    }
+    );
+    
+    
+    const promise2 = new Promise(function(myResolve, myReject)
+    {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                merit_dataObject = JSON.parse(this.responseText);
+                myResolve();
+            }
+            else if (this.readyState == 4 && this.status != 200)
+            {
+                myReject("Failed to load merit data from data/merit_data.json");
+            }
+        };
+        xhttp.open("POST", "data/merit_data.json", true);
+        xhttp.send();
+    }
+    );
+
+    
+
+    await Promise.all([promise1, promise2]).then(
+        function()
+        {
+            ImportFromUrl().catch(values => {
+                console.error(values);
+            }).then(
+                function(value) {return Promise.resolve()},
+                function(error) {return Promise.reject("Error loading URL")}
+            );
+        },
+        function(error) {return Promise.reject(error)}
+    );
+    
+
 }
 
 function CheckIfMeritAvailable(courseCode)
@@ -392,6 +427,7 @@ async function DisplayAlertMessage(message, level, timeMs)
 
 function ExportToFile()
 {
+    document.getElementById("loadingGif").style.display = "block";
     var data = new Object();
     data.courses = new Array();
     selectedCourses.courses.forEach(course => {
@@ -402,7 +438,6 @@ function ExportToFile()
         data.courses.push(item);
     });
 
-    document.getElementById("loadingGif").style.display = "block";
     var downloadObject = document.createElement("a");
     var fileName = new Date().toLocaleString()+".ggc";
 
@@ -419,9 +454,35 @@ function ExportToFile()
     DisplayAlertMessage("Laddade ner data till "+fileName, 1, 6000);
 }
 
+function ExportToURL()
+{
+    document.getElementById("loadingGif").style.display = "block";
+    var data = new Object();
+    data.courses = new Array();
+    selectedCourses.courses.forEach(course => {
+        var item = new Object();
+        item.code = course.code;
+        item.grade = course.grade;
+        item.isMerit = course.isMerit;
+        data.courses.push(item);
+    });
+
+    var returnString = window.location.href.split('?')[0]+"?data="+encodeURIComponent(JSON.stringify(data));
+    document.getElementById("loadingGif").style.display = "none";
+
+    window.location.replace(returnString);
+}
+
 function ImportFromFile()
 {
     const importFile = document.getElementById('fileImport').files[0];
+
+    if (importFile == null)
+    {
+        DisplayAlertMessage("Välje en .ggc fil att läsa in!",3,2500);
+        return;
+    }
+
     var reader = new FileReader()
 
     reader.onload = function() {
@@ -431,9 +492,29 @@ function ImportFromFile()
     reader.readAsText(importFile);
 }
 
+async function ImportFromUrl()
+{
+    var searchParam = new URLSearchParams(window.location.search);
+    if (searchParam.has("data"))
+    {
+        var dataObject = new Object();
+        var rawData = searchParam.get("data");
+        var dataString = decodeURIComponent(rawData);
+        dataObject = JSON.parse(dataString);
+        console.log(dataObject);
+        AddMultiRows(dataObject);
+        return Promise.resolve("URL DATA PROCESED");
+    }
+    else
+    {
+        return Promise.reject("NO URL DATA");
+    }
+}
+
 function AddMultiRows(importObject)
 {
     //modal.hide(); - close add modal;
+    var itemCount = importObject.courses.length;
     do
     {
         var currentCourseItem = importObject.courses.shift();
@@ -478,10 +559,18 @@ function AddMultiRows(importObject)
         courseItem.html = element;
 
         selectedCourses.courses.push(courseItem);
-
-        DisplayAlertMessage(courseName+" tillagd!",1,3500);
     }
     while (importObject.courses.length > 0);
+    
+    if (itemCount == 1)
+    {
+        DisplayAlertMessage(itemCount+" kurs blev tillagd!",1,3500);
+    }
+    else
+    {
+        DisplayAlertMessage(itemCount+" kurser blev tillagda!",1,3500);
+    }
+
     ReloadList();
     document.getElementById("loadingGif").style.display = "none"; 
     return true;
