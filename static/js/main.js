@@ -483,6 +483,7 @@ function ImportFromFile()
         return;
     }
 
+    selectedCourses.courses = [];
     var reader = new FileReader()
 
     reader.onload = function() {
