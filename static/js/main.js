@@ -312,7 +312,8 @@ function AddRow()
         ReloadList();
         ClearAddMenu();
         document.getElementById("loadingGif").style.display = "none"; 
-        DisplayAlertMessage(courseName+" tillagd!",1,3500);
+        $('#courseSearchInput')[0].value;
+        DisplayAlertMessage(courseName+" tillagd!",1,3500);        
         return true;
     }
     else
@@ -575,4 +576,54 @@ function AddMultiRows(importObject)
     ReloadList();
     document.getElementById("loadingGif").style.display = "none"; 
     return true;
+}
+
+function SwitchAddMode(alternateMode)
+{
+    if (alternateMode)
+    {
+        $('#select_category').parent().css("display", "none");
+        $('#select_course').parent().css("display", "none");
+        $('#courseSearchInput').parent().css("display", "");
+    }
+    else
+    {
+        $('#select_category').parent().css("display", "");
+        $('#select_course').parent().css("display", "");
+        $('#courseSearchInput').parent().css("display", "none");
+    }
+}
+
+function CheckIfCodeValid()
+{
+    var isValid = false;
+
+    var input = $('#courseSearchInput')[0].value.toUpperCase();
+
+    for (let i = 0; i < dataObject.categories.length; i++) {
+        const category = dataObject.categories[i];
+        for (let j = 0; j < category.courses.length; j++) {
+            const course = category.courses[j];
+            if (input == course.code)
+            {
+                if ($('#courseSearchInput').hasClass("is-invalid"))
+                {
+                    $('#courseSearchInput').removeClass("is-invalid");
+                }
+                $('#courseSearchInput').addClass("is-valid");
+
+                $('#select_category').val(category.name);
+                CheckCategory();
+                $('#select_course').val(course.code);
+                CheckCourse();
+                return;
+            }
+        }
+    }
+    if ($('#courseSearchInput').hasClass("is-valid"))
+        {
+            $('#courseSearchInput').removeClass("is-valid");
+        }
+    $('#courseSearchInput').addClass("is-invalid");
+    ClearAddMenu();
 }
